@@ -2421,12 +2421,16 @@ main(int argc, char *argv[])
 	}
 	/* SKYNICK XXX */
 	if (state_changers) {
+		if (!strcmp(state_change[0], "id"))
+			pfctl_id_change_states(dev, ifaceopt, opts);
+			/*
 		if (!strcmp(state_change[0], "label"))
 			pfctl_label_change_states(dev, ifaceopt, opts);
 		else if (!strcmp(state_change[0], "id"))
 			pfctl_id_change_states(dev, ifaceopt, opts);
 		else
 			pfctl_net_change_states(dev, ifaceopt, opts);
+			*/
 	}
 	/* SKYNICK */
 
