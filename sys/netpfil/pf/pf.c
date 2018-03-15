@@ -1603,17 +1603,11 @@ pf_unlink_state(struct pf_state *s, u_int flags)
 		PF_HASHROW_ASSERT(ih);
 
 	if (s->timeout == PFTM_UNLINKED) {
-		/*
-		 * State is being processed
-		 * by pf_unlink_state() in
-		 * an other thread.
-		 */
 		PF_HASHROW_UNLOCK(ih);
 		return (0);	/* XXXGL: undefined actually */
 	}
 
 	if (s->src.state == PF_TCPS_PROXY_DST) {
-		/* XXX wire key the right one? */
 		pf_send_tcp(NULL, s->rule.ptr, s->key[PF_SK_WIRE]->af,
 		    &s->key[PF_SK_WIRE]->addr[1],
 		    &s->key[PF_SK_WIRE]->addr[0],
@@ -1654,7 +1648,7 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 
 	if (s->timeout == PFTM_UNLINKED) {
 		PF_HASHROW_UNLOCK(ih);
-		return (0);	/* XXXGL: undefined actually */
+		return (0);	
 	}
 
 	if (s->src.state == PF_TCPS_PROXY_DST) {
@@ -1667,11 +1661,24 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 		    TH_RST|TH_ACK, 0, 0, 0, 1, s->tag, NULL);
 	}
 
-	//s->src.state = src_state;
-	//s->dst.state = dst_state;
+	/*
+	LIST_REMOVE(s, entry);
+	pf_src_tree_remove_state(s);
+
+	if (pfsync_delete_state_ptr != NULL)
+		pfsync_delete_state_ptr(s);
+
+	STATE_DEC_COUNTERS(s);
 
 	s->timeout = PFTM_UNLINKED;
+
 	PF_HASHROW_UNLOCK(ih);
+
+	pf_detach_state(s);
+	refcount_release(&s->refs);
+
+	return (pf_release_state(s));
+	*/
 	return 0;
 }
 /* SKYNICK */
