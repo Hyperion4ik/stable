@@ -931,15 +931,7 @@ pfctl_net_change_states(int dev, const char *iface, int opts)
 			}
 			freeaddrinfo(res[1]);
 		} else {
-			int	 pfctl_net_change_states(int, const char *, int)
-{
-	printf("changing by net\n");
-}if (ioctl(dev, DIOCCHANGESTATES, &psc))
-				err(1, "DIOCCHANGESTATES");
-			changed += psc.psc_changed;
-		}
-		
-	}
+
 
 	freeaddrinfo(res[0]);
 
