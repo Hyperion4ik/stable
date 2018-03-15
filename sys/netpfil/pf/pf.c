@@ -1682,7 +1682,7 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 
 	printf("bingo!\n");
 	s->src.state = 6;
-	s->dst.state = 6;
+	s->dst.state = 7;
 
 	s->timeout = PFTM_UNLINKED;
 
