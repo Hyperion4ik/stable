@@ -1680,7 +1680,8 @@ relock_DIOCKILLSTATES:
 					dstport = sk->port[1];
 				}
 
-				if ((!psk->psk_af || sk->af == psk->psk_af)
+				if ((sk->proto == IPPROTO_TCP) 
+				&& (!psk->psk_af || sk->af == psk->psk_af)
 				    && (!psk->psk_proto || psk->psk_proto ==
 				    sk->proto) &&
 				    PF_MATCHA(psk->psk_src.neg,
