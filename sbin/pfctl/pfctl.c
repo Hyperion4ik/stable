@@ -82,9 +82,9 @@ int	 pfctl_net_kill_states(int, const char *, int);
 int	 pfctl_label_kill_states(int, const char *, int);
 int	 pfctl_id_kill_states(int, const char *, int);
 /* SKYNICK XXX */
-// int	 pfctl_net_change_states(int, const char *, int);
-// int	 pfctl_label_change_states(int, const char *, int);
 int indexof(char const * const [TCP_NSTATES], const char*);
+int	 pfctl_net_change_states(int, const char *, int);
+int	 pfctl_label_change_states(int, const char *, int);
 int	 pfctl_id_change_states(int, const char *, int);
 /* SKYNICK */
 void	 pfctl_init_options(struct pfctl *);
@@ -727,6 +727,7 @@ pfctl_id_kill_states(int dev, const char *iface, int opts)
 }
 
 /* SKYNICK XXX */
+
 int indexof(char const * const array[TCP_NSTATES], const char* str)
 {
 	for(int i = 0; i < TCP_NSTATES; i++) {
@@ -740,6 +741,7 @@ int indexof(char const * const array[TCP_NSTATES], const char* str)
 int
 pfctl_id_change_states(int dev, const char *iface, int opts)
 {
+	printf("changing by id\n");
 	struct pfioc_state_change psc;
 
 	if (state_changers < 4) 
@@ -783,6 +785,19 @@ pfctl_id_change_states(int dev, const char *iface, int opts)
 
 	return 0;
 }
+
+int	 pfctl_label_change_states(int, const char *, int)
+{
+	printf("changing by label\n");
+}
+
+
+int	 pfctl_net_change_states(int, const char *, int)
+{
+	printf("changing by net\n");
+}
+
+
 /* SKYNICK */
 
 
@@ -2405,8 +2420,12 @@ main(int argc, char *argv[])
 	}
 	/* SKYNICK XXX */
 	if (state_changers) {
-		if (!strcmp(state_change[0], "id"))
+		if (!strcmp(state_change[0], "label"))
+			pfctl_label_change_states(dev, ifaceopt, opts);
+		else if (!strcmp(state_change[0], "id"))
 			pfctl_id_change_states(dev, ifaceopt, opts);
+		else
+			pfctl_net_change_states(dev, ifaceopt, opts);
 	}
 	/* SKYNICK */
 
