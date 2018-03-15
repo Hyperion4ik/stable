@@ -1735,9 +1735,9 @@ relock_DIOCKILLSTATES:
 			break;
 		}
 
-			struct pf_state_key	*sk;
-			struct pf_addr *srcaddr, *dstaddr;
-			u_int16_t srcport, dstport;
+			// struct pf_state_key	*sk;
+			// struct pf_addr *srcaddr, *dstaddr;
+			// u_int16_t srcport, dstport;
 
 		for (int i = 0; i <= pf_hashmask; i++) {
 			struct pf_idhash *ih = &V_pf_idhash[i];
