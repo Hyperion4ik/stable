@@ -1706,7 +1706,6 @@ relock_DIOCKILLSTATES:
 				    (!psk->psk_ifname[0] ||
 				    !strcmp(psk->psk_ifname,
 				    s->kif->pfik_name))) {
-					printf("proto: %d", sk->proto);
 					if(sk->proto == IPPROTO_TCP) {
 						pf_unlink_state(s, PF_ENTER_LOCKED);
 						printf("bingo\n");
