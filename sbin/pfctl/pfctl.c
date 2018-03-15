@@ -743,6 +743,7 @@ pfctl_id_change_states(int dev, const char *iface, int opts)
 {
 	printf("changing by id\n");
 	struct pfioc_state_change psc;
+	int src_state, dst_state;
 
 	if (state_changers < 4) 
 	{
@@ -766,8 +767,8 @@ pfctl_id_change_states(int dev, const char *iface, int opts)
 	}
 
 	psc.psc_pfcmp.id = htobe64(psc.psc_pfcmp.id);
-	int src_state = indexof(tcpstates, state_change[2]);
-	int dst_state = indexof(tcpstates, state_change[3]);
+	src_state = indexof(tcpstates, state_change[2]);
+	dst_state = indexof(tcpstates, state_change[3]);
 	if(src_state < 0 || dst_state < 0) {
 		warnx("there are no such states");
 		usage();
@@ -778,7 +779,6 @@ pfctl_id_change_states(int dev, const char *iface, int opts)
 	if (ioctl(dev, DIOCCHANGESTATES, &psc))
 		err(1, "DIOCCHANGESTATES");
 
-/* CURRENT */
 	if ((opts & PF_OPT_QUIET) == 0)
 		fprintf(stderr, "tcp state of %lu changed to %s:%s\n", 
 		psc.psc_pfcmp.id, state_change[2], state_change[3]);
