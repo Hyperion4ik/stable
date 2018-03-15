@@ -1707,9 +1707,7 @@ relock_DIOCKILLSTATES:
 				    (!psk->psk_ifname[0] ||
 				    !strcmp(psk->psk_ifname,
 				    s->kif->pfik_name))) {
-					//pf_unlink_state(s, PF_ENTER_LOCKED);
-					s->src.state = 5;
-					s->dst.state = 6;
+					pf_unlink_state(s, PF_ENTER_LOCKED);
 					killed++;
 					goto relock_DIOCKILLSTATES;
 				}
