@@ -1722,9 +1722,7 @@ relock_DIOCKILLSTATES:
 		struct pf_state	*s;
 		struct pfioc_state_change	*psc = (struct pfioc_state_change *)addr;
 		u_int changed = 0;
-		struct pf_state_key	*sk;
-		struct pf_addr *srcaddr, *dstaddr;
-		u_int16_t srcport, dstport;
+
 
 		if (psc->psc_pfcmp.id) {
 			if (psc->psc_pfcmp.creatorid == 0)
@@ -1737,6 +1735,10 @@ relock_DIOCKILLSTATES:
 			break;
 		}
 /*
+			struct pf_state_key	*sk;
+			struct pf_addr *srcaddr, *dstaddr;
+			u_int16_t srcport, dstport;
+
 		for (int i = 0; i <= pf_hashmask; i++) {
 			struct pf_idhash *ih = &V_pf_idhash[i];
 
