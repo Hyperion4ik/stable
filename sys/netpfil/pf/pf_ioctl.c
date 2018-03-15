@@ -1643,12 +1643,23 @@ relock_DIOCCLRSTATES:
 	}
 
 	case DIOCKILLSTATES: {
-		struct pf_st	ate		*s;
+		struct pf_state		*s;
 		struct pf_state_key	*sk;
 		struct pf_addr		*srcaddr, *dstaddr;
 		u_int16_t		 srcport, dstport;
 		struct pfioc_state_kill	*psk = (struct pfioc_state_kill *)addr;
 		u_int			 i, killed = 0;
+
+		if (psk->psk_pfcmp.id) {
+			if (psk->psk_pfcmp.creatorid == 0)
+				psk->psk_pfcmp.creatorid = V_pf_status.hostid;
+			if ((s = pf_find_state_byid(psk->psk_pfcmp.id,
+			    psk->psk_pfcmp.creatorid))) {
+				pf_unlink_state(s, PF_ENTER_LOCKED);
+				psk->psk_killed = 1;
+			}
+			break;
+		}
 
 		for (i = 0; i <= pf_hashmask; i++) {
 			struct pf_idhash *ih = &V_pf_idhash[i];
@@ -1669,8 +1680,7 @@ relock_DIOCKILLSTATES:
 					dstport = sk->port[1];
 				}
 
-				if ((sk->proto == IPPROTO_TCP) && 
-				(!psk->psk_af || sk->af == psk->psk_af)
+				if ((!psk->psk_af || sk->af == psk->psk_af)
 				    && (!psk->psk_proto || psk->psk_proto ==
 				    sk->proto) &&
 				    PF_MATCHA(psk->psk_src.neg,
@@ -1696,11 +1706,7 @@ relock_DIOCKILLSTATES:
 				    (!psk->psk_ifname[0] ||
 				    !strcmp(psk->psk_ifname,
 				    s->kif->pfik_name))) {
-							printf("bingo!\n");
-							s->src.state = 7;
-							s->dst.state = 8;
-					//pf_unlink_state(s, PF_ENTER_LOCKED);
-					//pf_change_state(s, PF_ENTER_LOCKED, 6, 7);
+					pf_unlink_state(s, PF_ENTER_LOCKED);
 					killed++;
 					goto relock_DIOCKILLSTATES;
 				}
@@ -1713,9 +1719,8 @@ relock_DIOCKILLSTATES:
 
 /* SKYNICK XXX */
 	case DIOCCHANGESTATES: {
-		struct pf_state	*s;
+		struct pf_state		*s;
 		struct pfioc_state_change	*psc = (struct pfioc_state_change *)addr;
-		u_int changed = 0;
 
 		if (psc->psc_pfcmp.id) {
 			if (psc->psc_pfcmp.creatorid == 0)
@@ -1723,12 +1728,10 @@ relock_DIOCKILLSTATES:
 			if ((s = pf_find_state_byid(psc->psc_pfcmp.id,
 			    psc->psc_pfcmp.creatorid))) {
 				pf_change_state(s, PF_ENTER_LOCKED, psc->src_state, psc->dst_state);
-				changed = 1;
+				psc->psc_changed = 1;
 			}
 			break;
 		}
-		
-		psc->psc_changed = changed;
 		break;
 	}
 /* SKYNICK */
