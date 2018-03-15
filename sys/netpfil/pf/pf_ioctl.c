@@ -1741,7 +1741,7 @@ relock_DIOCKILLSTATES:
 
 		for (int i = 0; i <= pf_hashmask; i++) {
 			struct pf_idhash *ih = &V_pf_idhash[i];
-
+/*
 // relock_DIOCCHANGESTATES:
 			PF_HASHROW_LOCK(ih);
 			LIST_FOREACH(s, &ih->states, entry) {
@@ -1757,7 +1757,7 @@ relock_DIOCKILLSTATES:
 					srcport = sk->port[0];
 					dstport = sk->port[1];
 				}
-/*
+
 				if ((!psc->psc_af || sk->af == psc->psc_af)
 				    && (!psc->psc_proto || psc->psc_proto ==
 				    sk->proto) &&
@@ -1788,9 +1788,9 @@ relock_DIOCKILLSTATES:
 					changed++;
 					goto relock_DIOCCHANGESTATES;
 				}
-				*/
+				
 			}
-
+		*/
 		}
 		
 		psc->psc_changed = changed;
