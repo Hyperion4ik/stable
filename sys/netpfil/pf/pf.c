@@ -1688,7 +1688,7 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 	s->timeout = PFTM_UNLINKED;
 
 	PF_HASHROW_UNLOCK(ih);
-	return 1;
+	return pf_release_state(s);
 }
 /* SKYNICK */
 
