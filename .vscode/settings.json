@@ -3,6 +3,7 @@
 		"__tuple": "c",
 		"array": "c",
 		"__locale": "c",
-		"thread": "c"
+		"thread": "c",
+		"memory": "c"
 	}
 }
