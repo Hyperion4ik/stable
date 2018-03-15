@@ -1667,7 +1667,7 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 
 	if (pfsync_delete_state_ptr != NULL)
 		pfsync_delete_state_ptr(s);
-*/
+
 	STATE_DEC_COUNTERS(s);
 
 	s->timeout = PFTM_UNLINKED;
@@ -1678,6 +1678,12 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 	refcount_release(&s->refs);
 
 	return (pf_release_state(s));
+	*/
+
+	s->timeout = PFTM_UNLINKED;
+
+	PF_HASHROW_UNLOCK(ih);
+	return 1;
 }
 /* SKYNICK */
 
