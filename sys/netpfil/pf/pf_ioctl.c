@@ -1736,7 +1736,7 @@ relock_DIOCKILLSTATES:
 			}
 			break;
 		}
-
+/*
 		for (int i = 0; i <= pf_hashmask; i++) {
 			struct pf_idhash *ih = &V_pf_idhash[i];
 
@@ -1789,6 +1789,7 @@ relock_DIOCCHANGESTATES:
 			}
 
 		}
+		*/
 		psc->psc_changed = changed;
 		break;
 	}
