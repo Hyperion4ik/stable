@@ -1663,7 +1663,7 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 		    TH_RST|TH_ACK, 0, 0, 0, 1, s->tag, NULL);
 	}
 
-	printf("state: %lu \n", s->id);
+	printf("state: %x \n", s->id);
 	LIST_REMOVE(s, entry);
 	pf_src_tree_remove_state(s);
 
