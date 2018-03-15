@@ -934,7 +934,7 @@ pf_state_key_attach(struct pf_state_key *skw, struct pf_state_key *sks,
 
 	/*
 	 * We need to lock hash slots of both keys. To avoid deadlock
-	 * we always lock the slot with lower address first. Unlock order
+		 * we always lock the slot with lower address first. Unlock order
 	 * isn't important.
 	 *
 	 * We also need to lock ID hash slot before dropping key
@@ -1617,6 +1617,8 @@ pf_unlink_state(struct pf_state *s, u_int flags)
 		    TH_RST|TH_ACK, 0, 0, 0, 1, s->tag, NULL);
 	}
 
+	printf("state: %ul \n", s->id);
+
 	LIST_REMOVE(s, entry);
 	pf_src_tree_remove_state(s);
 
@@ -1661,7 +1663,6 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 		    TH_RST|TH_ACK, 0, 0, 0, 1, s->tag, NULL);
 	}
 
-/*
 	LIST_REMOVE(s, entry);
 	pf_src_tree_remove_state(s);
 
@@ -1678,17 +1679,7 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 	refcount_release(&s->refs);
 
 	return (pf_release_state(s));
-	*/
 
-	printf("bingo!\n");
-	printf("proto: %d\n", s->key[PF_SK_WIRE]->proto);
-	//s->src.state = 6;
-	//s->dst.state = 7;
-
-	s->timeout = PFTM_UNLINKED;
-
-	PF_HASHROW_UNLOCK(ih);
-	return pf_release_state(s);
 }
 /* SKYNICK */
 
