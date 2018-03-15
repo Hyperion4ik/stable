@@ -1791,6 +1791,7 @@ relock_DIOCKILLSTATES:
 				
 			}
 		*/
+		PF_HASHROW_UNLOCK(ih);
 		}
 		
 		psc->psc_changed = changed;
