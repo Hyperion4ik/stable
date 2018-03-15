@@ -828,7 +828,7 @@ pfctl_id_change_states(int dev, const char *iface, int opts)
 int
 pfctl_net_change_states(int dev, const char *iface, int opts)
 {
-	printf("changing by label\n");
+	printf("changing by net\n");
 	
 	struct pfioc_state_change psc;
 	struct addrinfo *res[2], *resp[2];
