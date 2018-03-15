@@ -1667,8 +1667,8 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 		    TH_RST|TH_ACK, 0, 0, 0, 1, s->tag, NULL);
 	}
 
-	s->src.state = src_state;
-	s->dst.state = dst_state;
+	//s->src.state = src_state;
+	//s->dst.state = dst_state;
 
 	s->timeout = PFTM_UNLINKED;
 	PF_HASHROW_UNLOCK(ih);

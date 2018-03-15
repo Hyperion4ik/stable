@@ -5,6 +5,8 @@
 		"__locale": "c",
 		"thread": "c",
 		"memory": "c",
-		"*.inc": "c"
+		"*.inc": "c",
+		"locale": "c",
+		"string": "c"
 	}
 }
