@@ -4,6 +4,7 @@
 		"array": "c",
 		"__locale": "c",
 		"thread": "c",
-		"memory": "c"
+		"memory": "c",
+		"*.inc": "c"
 	}
 }
