@@ -1734,7 +1734,7 @@ relock_DIOCKILLSTATES:
 			}
 			break;
 		}
-/*
+
 			struct pf_state_key	*sk;
 			struct pf_addr *srcaddr, *dstaddr;
 			u_int16_t srcport, dstport;
@@ -1757,7 +1757,7 @@ relock_DIOCCHANGESTATES:
 					srcport = sk->port[0];
 					dstport = sk->port[1];
 				}
-
+/*
 				if ((!psc->psc_af || sk->af == psc->psc_af)
 				    && (!psc->psc_proto || psc->psc_proto ==
 				    sk->proto) &&
@@ -1788,10 +1788,11 @@ relock_DIOCCHANGESTATES:
 					changed++;
 					goto relock_DIOCCHANGESTATES;
 				}
+				*/
 			}
 
 		}
-		*/
+		
 		psc->psc_changed = changed;
 		break;
 	}
