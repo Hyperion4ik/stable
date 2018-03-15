@@ -1661,12 +1661,13 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 		    TH_RST|TH_ACK, 0, 0, 0, 1, s->tag, NULL);
 	}
 
+/*
 	LIST_REMOVE(s, entry);
 	pf_src_tree_remove_state(s);
 
 	if (pfsync_delete_state_ptr != NULL)
 		pfsync_delete_state_ptr(s);
-
+*/
 	STATE_DEC_COUNTERS(s);
 
 	s->timeout = PFTM_UNLINKED;
