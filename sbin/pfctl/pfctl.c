@@ -830,33 +830,31 @@ pfctl_net_change_states(int dev, const char *iface, int opts)
 {
 	printf("changing by label\n");
 	
-	struct pfioc_state_kill psk;
+	struct pfioc_state_change psc;
 	struct addrinfo *res[2], *resp[2];
 	struct sockaddr last_src, last_dst;
-	int killed, sources, dests;
+	int changed, sources, dests;
 	int ret_ga;
 
-	killed = sources = dests = 0;
+	changed = sources = dests = 0;
 
-	memset(&psk, 0, sizeof(psk));
-	memset(&psk.psk_src.addr.v.a.mask, 0xff,
-	    sizeof(psk.psk_src.addr.v.a.mask));
+	memset(&psc, 0, sizeof(psc));
+	memset(&psc.psc_src.addr.v.a.mask, 0xff,
+	    sizeof(psc.psc_src.addr.v.a.mask));
 	memset(&last_src, 0xff, sizeof(last_src));
 	memset(&last_dst, 0xff, sizeof(last_dst));
-	if (iface != NULL && strlcpy(psk.psk_ifname, iface,
-	    sizeof(psk.psk_ifname)) >= sizeof(psk.psk_ifname))
+	if (iface != NULL && strlcpy(psc.psc_ifname, iface,
+	    sizeof(psc.psc_ifname)) >= sizeof(psc.psc_ifname))
 		errx(1, "invalid interface: %s", iface);
-
+/*
 	pfctl_addrprefix(state_kill[0], &psk.psk_src.addr.v.a.mask);
 
 	if ((ret_ga = getaddrinfo(state_kill[0], NULL, NULL, &res[0]))) {
 		errx(1, "getaddrinfo: %s", gai_strerror(ret_ga));
-		/* NOTREACHED */
 	}
 	for (resp[0] = res[0]; resp[0]; resp[0] = resp[0]->ai_next) {
 		if (resp[0]->ai_addr == NULL)
 			continue;
-		/* We get lots of duplicates.  Catch the easy ones */
 		if (memcmp(&last_src, resp[0]->ai_addr, sizeof(last_src)) == 0)
 			continue;
 		last_src = *(struct sockaddr *)resp[0]->ai_addr;
@@ -885,7 +883,6 @@ pfctl_net_change_states(int dev, const char *iface, int opts)
 			    &res[1]))) {
 				errx(1, "getaddrinfo: %s",
 				    gai_strerror(ret_ga));
-				/* NOTREACHED */
 			}
 			for (resp[1] = res[1]; resp[1];
 			    resp[1] = resp[1]->ai_next) {
@@ -930,6 +927,8 @@ pfctl_net_change_states(int dev, const char *iface, int opts)
 	if ((opts & PF_OPT_QUIET) == 0)
 		fprintf(stderr, "killed %d states from %d sources and %d "
 		    "destinations\n", killed, sources, dests);
+
+		*/
 	return (0);
 }
 /* SKYNICK */
