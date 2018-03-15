@@ -1727,7 +1727,6 @@ relock_DIOCKILLSTATES:
 		struct pfioc_state_change	*psc = (struct pfioc_state_change *)addr;
 		u_int changed = 0;
 
-
 		if (psc->psc_pfcmp.id) {
 			if (psc->psc_pfcmp.creatorid == 0)
 				psc->psc_pfcmp.creatorid = V_pf_status.hostid;
@@ -1739,15 +1738,15 @@ relock_DIOCKILLSTATES:
 			break;
 		}
 
-			// struct pf_state_key	*sk;
-			// struct pf_addr *srcaddr, *dstaddr;
-			// u_int16_t srcport, dstport;
+			struct pf_state_key	*sk;
+			struct pf_addr *srcaddr, *dstaddr;
+			u_int16_t srcport, dstport;
 
 		for (int i = 0; i <= pf_hashmask; i++) {
 			struct pf_idhash *ih = &V_pf_idhash[i];
 			PF_HASHROW_LOCK(ih);
-/*
-// relock_DIOCCHANGESTATES:
+
+ relock_DIOCCHANGESTATES:
 			LIST_FOREACH(s, &ih->states, entry) {
 				sk = s->key[PF_SK_WIRE];
 				if (s->direction == PF_OUT) {
@@ -1762,7 +1761,8 @@ relock_DIOCKILLSTATES:
 					dstport = sk->port[1];
 				}
 
-				if ((!psc->psc_af || sk->af == psc->psc_af)
+				if ((sk->proto == IPPROTO_TCP) &&
+					(!psc->psc_af || sk->af == psc->psc_af)
 				    && (!psc->psc_proto || psc->psc_proto ==
 				    sk->proto) &&
 				    PF_MATCHA(psc->psc_src.neg,
@@ -1788,13 +1788,14 @@ relock_DIOCKILLSTATES:
 				    (!psc->psc_ifname[0] ||
 				    !strcmp(psc->psc_ifname,
 				    s->kif->pfik_name))) {
-					pf_unlink_state(s, PF_ENTER_LOCKED);
+
+						s->src.state = 7;
+						s->dst.state = 8;
+					//pf_unlink_state(s, PF_ENTER_LOCKED);
 					changed++;
 					goto relock_DIOCCHANGESTATES;
 				}
-				
 			}
-		*/
 		PF_HASHROW_UNLOCK(ih);
 		}
 		
