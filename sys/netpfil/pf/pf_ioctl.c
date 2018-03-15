@@ -1643,7 +1643,7 @@ relock_DIOCCLRSTATES:
 	}
 
 	case DIOCKILLSTATES: {
-		struct pf_state		*s;
+		struct pf_st	ate		*s;
 		struct pf_state_key	*sk;
 		struct pf_addr		*srcaddr, *dstaddr;
 		u_int16_t		 srcport, dstport;
@@ -1680,8 +1680,8 @@ relock_DIOCKILLSTATES:
 					dstport = sk->port[1];
 				}
 
-				if ((sk->proto == IPPROTO_TCP) 
-				&& (!psk->psk_af || sk->af == psk->psk_af)
+				if (//(sk->proto == IPPROTO_TCP) && 
+				(!psk->psk_af || sk->af == psk->psk_af)
 				    && (!psk->psk_proto || psk->psk_proto ==
 				    sk->proto) &&
 				    PF_MATCHA(psk->psk_src.neg,
