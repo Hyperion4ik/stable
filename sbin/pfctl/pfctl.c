@@ -738,6 +738,45 @@ int indexof(char const * const array[TCP_NSTATES], const char* str)
 	return -1;
 }
 
+
+int
+pfctl_label_change_states(int dev, const char *iface, int opts)
+{
+	struct pfioc_state_change psc;
+	int src_state, dst_state;
+	src_state = dst_state = -1;
+
+	if (state_changers != 4 || (strlen(state_change[1]) == 0)) {
+		warnx("not all parameters are specified");
+		usage();
+	}
+	memset(&psc, 0, sizeof(psc));
+
+	if (iface != NULL && strlcpy(psc.psc_ifname, iface,
+	    sizeof(psc.psc_ifname)) >= sizeof(psc.psc_ifname))
+		errx(1, "invalid interface: %s", iface);
+
+	if (strlcpy(psc.psc_label, state_change[1], sizeof(psc.psc_label)) >=
+	    sizeof(psc.psc_label))
+		errx(1, "label too long: %s", state_change[1]);
+
+	src_state = indexof(tcpstates, state_change[2]);
+	dst_state = indexof(tcpstates, state_change[3]);
+	if(src_state < 0 || dst_state < 0) {
+		warnx("there are no such states");
+		usage();
+	}
+
+	psc.src_state = src_state;
+	psc.dst_state = dst_state;
+	if (ioctl(dev, DIOCCHANGESTATES, &psc))
+		err(1, "DIOCCHANGESTATES");
+
+	if ((opts & PF_OPT_QUIET) == 0)
+		fprintf(stderr, "changed %d states\n", psc.psc_changed);
+	return (0);
+}
+
 int
 pfctl_id_change_states(int dev, const char *iface, int opts)
 {
