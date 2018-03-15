@@ -1661,7 +1661,6 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 		    TH_RST|TH_ACK, 0, 0, 0, 1, s->tag, NULL);
 	}
 
-	/*
 	LIST_REMOVE(s, entry);
 	pf_src_tree_remove_state(s);
 
@@ -1678,11 +1677,6 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 	refcount_release(&s->refs);
 
 	return (pf_release_state(s));
-	*/
-	s->timeout = PFTM_UNLINKED;
-
-	PF_HASHROW_UNLOCK(ih);
-	return 0;
 }
 /* SKYNICK */
 
