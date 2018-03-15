@@ -1742,7 +1742,7 @@ relock_DIOCKILLSTATES:
 		for (int i = 0; i <= pf_hashmask; i++) {
 			struct pf_idhash *ih = &V_pf_idhash[i];
 
-relock_DIOCCHANGESTATES:
+// relock_DIOCCHANGESTATES:
 			PF_HASHROW_LOCK(ih);
 			LIST_FOREACH(s, &ih->states, entry) {
 				sk = s->key[PF_SK_WIRE];
