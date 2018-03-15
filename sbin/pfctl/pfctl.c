@@ -846,10 +846,10 @@ pfctl_net_change_states(int dev, const char *iface, int opts)
 	if (iface != NULL && strlcpy(psc.psc_ifname, iface,
 	    sizeof(psc.psc_ifname)) >= sizeof(psc.psc_ifname))
 		errx(1, "invalid interface: %s", iface);
-/*
-	pfctl_addrprefix(state_kill[0], &psk.psk_src.addr.v.a.mask);
 
-	if ((ret_ga = getaddrinfo(state_kill[0], NULL, NULL, &res[0]))) {
+	pfctl_addrprefix(state_change[0], &psc.psc_src.addr.v.a.mask);
+
+	if ((ret_ga = getaddrinfo(state_change[0], NULL, NULL, &res[0]))) {
 		errx(1, "getaddrinfo: %s", gai_strerror(ret_ga));
 	}
 	for (resp[0] = res[0]; resp[0]; resp[0] = resp[0]->ai_next) {
@@ -859,27 +859,27 @@ pfctl_net_change_states(int dev, const char *iface, int opts)
 			continue;
 		last_src = *(struct sockaddr *)resp[0]->ai_addr;
 
-		psk.psk_af = resp[0]->ai_family;
+		psc.psc_af = resp[0]->ai_family;
 		sources++;
 
-		if (psk.psk_af == AF_INET)
-			psk.psk_src.addr.v.a.addr.v4 =
+		if (psc.psc_af == AF_INET)
+			psc.psc_src.addr.v.a.addr.v4 =
 			    ((struct sockaddr_in *)resp[0]->ai_addr)->sin_addr;
-		else if (psk.psk_af == AF_INET6)
-			psk.psk_src.addr.v.a.addr.v6 =
+		else if (psc.psc_af == AF_INET6)
+			psc.psc_src.addr.v.a.addr.v6 =
 			    ((struct sockaddr_in6 *)resp[0]->ai_addr)->
 			    sin6_addr;
 		else
-			errx(1, "Unknown address family %d", psk.psk_af);
+			errx(1, "Unknown address family %d", psc.psc_af);
 
-		if (state_killers > 1) {
+		if (state_changers > 1) {
 			dests = 0;
-			memset(&psk.psk_dst.addr.v.a.mask, 0xff,
-			    sizeof(psk.psk_dst.addr.v.a.mask));
+			memset(&psc.psc_dst.addr.v.a.mask, 0xff,
+			    sizeof(psc.psc_dst.addr.v.a.mask));
 			memset(&last_dst, 0xff, sizeof(last_dst));
-			pfctl_addrprefix(state_kill[1],
-			    &psk.psk_dst.addr.v.a.mask);
-			if ((ret_ga = getaddrinfo(state_kill[1], NULL, NULL,
+			pfctl_addrprefix(state_change[1],
+			    &psc.psc_dst.addr.v.a.mask);
+			if ((ret_ga = getaddrinfo(state_change[1], NULL, NULL,
 			    &res[1]))) {
 				errx(1, "getaddrinfo: %s",
 				    gai_strerror(ret_ga));
@@ -888,7 +888,7 @@ pfctl_net_change_states(int dev, const char *iface, int opts)
 			    resp[1] = resp[1]->ai_next) {
 				if (resp[1]->ai_addr == NULL)
 					continue;
-				if (psk.psk_af != resp[1]->ai_family)
+				if (psc.psc_af != resp[1]->ai_family)
 					continue;
 
 				if (memcmp(&last_dst, resp[1]->ai_addr,
@@ -898,37 +898,36 @@ pfctl_net_change_states(int dev, const char *iface, int opts)
 
 				dests++;
 
-				if (psk.psk_af == AF_INET)
-					psk.psk_dst.addr.v.a.addr.v4 =
+				if (psc.psc_af == AF_INET)
+					psc.psc_dst.addr.v.a.addr.v4 =
 					    ((struct sockaddr_in *)resp[1]->
 					    ai_addr)->sin_addr;
-				else if (psk.psk_af == AF_INET6)
-					psk.psk_dst.addr.v.a.addr.v6 =
+				else if (psc.psc_af == AF_INET6)
+					psc.psc_dst.addr.v.a.addr.v6 =
 					    ((struct sockaddr_in6 *)resp[1]->
 					    ai_addr)->sin6_addr;
 				else
 					errx(1, "Unknown address family %d",
-					    psk.psk_af);
+					    psc.psc_af);
 
-				if (ioctl(dev, DIOCKILLSTATES, &psk))
-					err(1, "DIOCKILLSTATES");
-				killed += psk.psk_killed;
+				if (ioctl(dev, DIOCCHANGESTATES, &psc))
+					err(1, "DIOCCHANGESTATES");
+				changed += psc.psc_changed;
 			}
 			freeaddrinfo(res[1]);
 		} else {
-			if (ioctl(dev, DIOCKILLSTATES, &psk))
-				err(1, "DIOCKILLSTATES");
-			killed += psk.psk_killed;
+			if (ioctl(dev, DIOCCHANGESTATES, &psc))
+				err(1, "DIOCCHANGESTATES");
+			changed += psc.psc_changed;
 		}
 	}
 
 	freeaddrinfo(res[0]);
 
 	if ((opts & PF_OPT_QUIET) == 0)
-		fprintf(stderr, "killed %d states from %d sources and %d "
-		    "destinations\n", killed, sources, dests);
+		fprintf(stderr, "changed %d states from %d sources and %d "
+		    "destinations\n", changed, sources, dests);
 
-		*/
 	return (0);
 }
 /* SKYNICK */
