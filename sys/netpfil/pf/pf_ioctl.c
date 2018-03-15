@@ -1655,7 +1655,7 @@ relock_DIOCCLRSTATES:
 				psk->psk_pfcmp.creatorid = V_pf_status.hostid;
 			if ((s = pf_find_state_byid(psk->psk_pfcmp.id,
 			    psk->psk_pfcmp.creatorid))) {
-				pf_unlink_state(s, PF_ENTER_LOCKED);
+				//pf_unlink_state(s, PF_ENTER_LOCKED);
 				psk->psk_killed = 1;
 			}
 			break;
@@ -1706,7 +1706,7 @@ relock_DIOCKILLSTATES:
 				    (!psk->psk_ifname[0] ||
 				    !strcmp(psk->psk_ifname,
 				    s->kif->pfik_name))) {
-					pf_unlink_state(s, PF_ENTER_LOCKED);
+					//pf_unlink_state(s, PF_ENTER_LOCKED);
 					killed++;
 					goto relock_DIOCKILLSTATES;
 				}
