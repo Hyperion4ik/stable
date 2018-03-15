@@ -1732,6 +1732,20 @@ relock_DIOCKILLSTATES:
 			}
 			break;
 		}
+
+			u_int i;
+
+		for (i = 0; i <= pf_hashmask; i++) {
+			struct pf_idhash *ih = &V_pf_idhash[i];
+relock_xxx:
+			PF_HASHROW_LOCK(ih);
+			LIST_FOREACH(s, &ih->states, entry) {
+				printf("state: %lu", s->id);
+				goto relock_xxx;
+			}
+			PF_HASHROW_UNLOCK(ih);
+		}
+
 		break;
 	}
 /* SKYNICK */
