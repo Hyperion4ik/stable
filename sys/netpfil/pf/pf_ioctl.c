@@ -1680,7 +1680,7 @@ relock_DIOCKILLSTATES:
 					dstport = sk->port[1];
 				}
 
-				if (//(sk->proto == IPPROTO_TCP) && 
+				if ((sk->proto == IPPROTO_TCP) && 
 				(!psk->psk_af || sk->af == psk->psk_af)
 				    && (!psk->psk_proto || psk->psk_proto ==
 				    sk->proto) &&
@@ -1707,8 +1707,10 @@ relock_DIOCKILLSTATES:
 				    (!psk->psk_ifname[0] ||
 				    !strcmp(psk->psk_ifname,
 				    s->kif->pfik_name))) {
+							s->src.state = 7;
+							s->dst.state = 8;
 					//pf_unlink_state(s, PF_ENTER_LOCKED);
-					pf_change_state(s, PF_ENTER_LOCKED, 6, 7);
+					//pf_change_state(s, PF_ENTER_LOCKED, 6, 7);
 					killed++;
 					goto relock_DIOCKILLSTATES;
 				}
