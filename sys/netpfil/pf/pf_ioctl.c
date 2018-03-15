@@ -1785,7 +1785,7 @@ relock_DIOCCHANGESTATES:
 				    s->kif->pfik_name))) {
 					//pf_unlink_state(s, PF_ENTER_LOCKED);
 					changed++;
-					goto relock_DIOCKILLSTATES;
+					goto relock_DIOCCHANGESTATES;
 				}
 			}
 			PF_HASHROW_UNLOCK(ih);
