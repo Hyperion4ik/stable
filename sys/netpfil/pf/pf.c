@@ -1654,7 +1654,17 @@ pf_change_state(struct pf_state *s, u_int flags, u_int8_t src_state, u_int8_t ds
 
 	if (s->timeout == PFTM_UNLINKED) {
 		PF_HASHROW_UNLOCK(ih);
-		return (0);
+		return (0);	/* XXXGL: undefined actually */
+	}
+
+	if (s->src.state == PF_TCPS_PROXY_DST) {
+		pf_send_tcp(NULL, s->rule.ptr, s->key[PF_SK_WIRE]->af,
+		    &s->key[PF_SK_WIRE]->addr[1],
+		    &s->key[PF_SK_WIRE]->addr[0],
+		    s->key[PF_SK_WIRE]->port[1],
+		    s->key[PF_SK_WIRE]->port[0],
+		    s->src.seqhi, s->src.seqlo + 1,
+		    TH_RST|TH_ACK, 0, 0, 0, 1, s->tag, NULL);
 	}
 
 	s->src.state = src_state;
